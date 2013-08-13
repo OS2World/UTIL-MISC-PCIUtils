@@ -1,0 +1,63 @@
+pciutils for OS/2
+pciutils for DOS
+
+install
+=======
+
+  place executables in %PATH% or use other ways to call them
+
+  place pci.ids in
+    a) %unixroot%/usr/share/
+    b) same directory as the executables
+    c) in %DPATH %
+
+  maybe download fresh database file from
+  <http://pciids.sourceforge.net/v2.2/pci.ids>
+  or .gz/.bz2. and unpack it.
+
+
+usage
+=====
+
+  see manual page dumps
+
+
+recompile
+=========
+
+Since 2.2.3, pciutils should also be compilable on OS/2 and DOS.
+port by Veit Kannegieser <veit@kannegieser.net>
+
+
+You have two and a half choices:
+1) install unix like shell and build utils and use GCC (tested 3.3.5-ga2)
+   and go via configure and make
+
+   example:
+
+   @echo off
+   call Y:\gcc\v3.3.5-ga2\usr\bin\gccenv.cmd
+   set path=d:\extra;y:\usr\bin;d:\extra\lxlite;%path%
+   set comspec=/bin/sh.exe
+   set ac_executable_extensions=".exe"
+   set AC_EXEEXT=".exe"
+   sh -c make
+
+2) adapt and use the the os2\_gcc.cmd batch file
+3) adapt and use the the os2\_watcom.cmd batch file
+   tested with OpenWatcom 1.5
+
+The public binary package is compild using OpenWatcom to avoid DLL depencies.
+
+
+implemented PCI access methods
+==============================
+
+  OS/2: 
+  - OEMHLP$ driver (default)
+  - port access (use -H1 or -H2), requires EMXIO.DLL in LIBPATH
+  
+  DOS 
+  - PCI BIOS software interrupt 1A (default)
+  - port access (use -H1 or -H2)
+  

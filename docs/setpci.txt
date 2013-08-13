@@ -1,0 +1,185 @@
+setpci(8)               The PCI Utilities               setpci(8)
+
+
+NAME
+       setpci - configure PCI devices
+
+SYNOPSIS
+       setpci [options] devices operations...
+
+
+DESCRIPTION
+       setpci  is  a  utility  for  querying  and configuring PCI
+       devices.
+
+       All numbers are entered in hexadecimal notation.
+
+       Root privileges are necessary for almost  all  operations,
+       excluding  reads  of the standard header of the configurað
+       tion space on some operating systems.  Please see lspci(8)
+       for details on access rights.
+
+
+OPTIONS
+       ðv     Tells  setpci  to  be  verbose and display detailed
+              information about configuration space accesses.
+
+       ðf     Tells setpci not to complain when  there's  nothing
+              to  do (when no devices are selected).  This option
+              is intended for use in widelyðdistributed  configuð
+              ration  scripts  where  it's  uncertain whether the
+              device in question is present  in  the  machine  or
+              not.
+
+       ðD     `Demo mode' ðð don't write anything to the configuð
+              ration registers.  It's useful to try setpci ðvD to
+              see what your complex sequence of setpci operations
+              does before you actually execute it.
+
+       ððversion
+              Shows setpci version. This option  should  be  used
+              standðalone.
+
+
+DEVICE SELECTION
+       Before  each  sequence  of  operations  you need to select
+       which devices you wish that operation to affect.
+
+       ðs [[[[<domain>]:]<bus>]:][<slot>][.[<func>]]
+              Show only devices in the specified domain (in  case
+              your  machine  has  several  host bridges, they can
+              either share a common bus number space or  each  of
+              them  can  address a PCI domain of its own; domains
+              are numbered from 0 to ffff), bus (0 to  ff),  slot
+              (0 to 1f) and function (0 to 7).  Each component of
+              the device address can be omitted or  set  to  "*",
+              both meaning "any value". All numbers are hexadecið
+              mal.  E.g., "0:" means all devices on  bus  0,  "0"
+              means  all  functions of device 0 on any bus, "0.3"
+              selects third function of device 0 on all buses and
+              ".4" shows only the fourth function of each device.
+
+       ðd [<vendor>]:[<device>]
+              Select devices with specified vendor and device ID.
+              Both ID's are given in hexadecimal and may be omitð
+              ted or given as "*", both meaning "any value".
+
+
+OPERATIONS
+       To query value of a configuration register, just  name  it
+       (either  by  typing its name or by typing register address
+       with optional .B, .W  or  .L  suffix  specifying  register
+       width as byte, word or longword).
+
+       To  set a register, write reg=values where reg is the same
+       as you would use to query the register  and  values  is  a
+       commaðseparated  list of values you want to write starting
+       with the given address. Each value to be  written  can  be
+       specified either as a hexadecimal number or as a bits:mask
+       pair which causes the bits corresponding to binary ones in
+       the mask to be changed to values of the corresponding bits
+       in the bits
+
+
+REGISTER NAMES
+       setpci knows the following configuration  register  names.
+       See  PCI  bus  specifications for their precise meaning or
+       consult header.h or /usr/include/linux/pci.h for a  couple
+       of comments.
+
+       VENDOR_ID
+       DEVICE_ID
+       COMMAND
+       STATUS
+       REVISION
+       CLASS_PROG
+       CLASS_DEVICE
+       CACHE_LINE_SIZE
+       LATENCY_TIMER
+       HEADER_TYPE
+       BIST
+       BASE_ADDRESS_0
+       BASE_ADDRESS_1
+       BASE_ADDRESS_2
+       BASE_ADDRESS_3
+       BASE_ADDRESS_4
+       BASE_ADDRESS_5
+       CARDBUS_CIS
+       SUBSYSTEM_VENDOR_ID
+       SUBSYSTEM_ID
+       ROM_ADDRESS
+       INTERRUPT_LINE
+       INTERRUPT_PIN
+       MIN_GNT
+       MAX_LAT
+       PRIMARY_BUS
+       SECONDARY_BUS
+       SUBORDINATE_BUS
+       SEC_LATENCY_TIMER
+       IO_BASE
+       IO_LIMIT
+       SEC_STATUS
+       MEMORY_BASE
+       MEMORY_LIMIT
+       PREF_MEMORY_BASE
+       PREF_MEMORY_LIMIT
+       PREF_BASE_UPPER32
+       PREF_LIMIT_UPPER32
+       IO_BASE_UPPER16
+       IO_LIMIT_UPPER16
+       BRIDGE_ROM_ADDRESS
+       BRIDGE_CONTROL
+       CB_CARDBUS_BASE
+       CB_CAPABILITIES
+       CB_SEC_STATUS
+       CB_BUS_NUMBER
+       CB_CARDBUS_NUMBER
+       CB_SUBORDINATE_BUS
+       CB_CARDBUS_LATENCY
+       CB_MEMORY_BASE_0
+       CB_MEMORY_LIMIT_0
+       CB_MEMORY_BASE_1
+       CB_MEMORY_LIMIT_1
+       CB_IO_BASE_0
+       CB_IO_BASE_0_HI
+       CB_IO_LIMIT_0
+       CB_IO_LIMIT_0_HI
+       CB_IO_BASE_1
+       CB_IO_BASE_1_HI
+       CB_IO_LIMIT_1
+       CB_IO_LIMIT_1_HI
+       CB_SUBSYSTEM_VENDOR_ID
+       CB_SUBSYSTEM_ID
+       CB_LEGACY_MODE_BASE
+
+
+PCILIB OPTIONS
+       The PCI utilities use PCILIB (a portable library providing
+       platformðindependent functions for PCI configuration space
+       access)  to talk to the PCI cards. Please see lspci(8) for
+       a list of switches controlling behavior of the library.
+
+
+EXAMPLES
+       `setpci ðd *:* latency_timer=40' sets the latency timer to
+       64 (40 hexadecimal).
+       `setpci ðs 0 device_id vendor_id' lists ID's of devices in
+       slot 0 in all buses.
+
+       `setpci ðs 12:3.4 3c.l=1,2,3' writes longword 1 to  regisð
+       ter 3c, 2 to register 3d and 3 to register 3e of device at
+       bus 12, slot 3, function 4.
+
+       `setpci ðs 13:8.4 40.b=50:d0,04:0c,ff' works  on  bus  13,
+       device  8, function 4: turns bit 7 off and bits 6 and 4 on
+       in the byte register 40; turns bit 3 off and bit 2  on  in
+       the byte register 41; sets byte register 42 to ff.
+
+
+SEE ALSO
+       lspci(8)
+
+
+AUTHOR
+       The   PCI   Utilities   are  maintained  by  Martin  Mares
+       <mj@ucw.cz>.

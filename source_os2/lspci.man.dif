@@ -1,0 +1,33 @@
+--- lspci.man.org	2006-05-05 12:18:34.000000000 +0000
++++ lspci.man	2006-05-31 22:34:46.000000000 +0000
+@@ -138,11 +138,11 @@
+ .TP
+ .B intel_conf1
+ Direct hardware access via Intel configuration mechanism 1. Available on i386 and compatibles
+-on Linux, Solaris/x86, GNU Hurd and Windows. Requires root privileges.
++on Linux, Solaris/x86, GNU Hurd, Windows, DOS and OS/2. Requires root privileges.
+ .TP
+ .B intel_conf2
+ Direct hardware access via Intel configuration mechanism 2. Available on i386 and compatibles
+-on Linux, Solaris/x86 and GNU Hurd. Requires root privileges. Warning: This method
++on Linux, Solaris/x86, GNU Hurd, Windows, DOS and OS/2. Requires root privileges. Warning: This method
+ is able to address only first 16 devices on any bus and it seems to be very
+ unreliable in many cases.
+ .TP
+@@ -158,6 +158,16 @@
+ The
+ .B /dev/pci0
+ device on NetBSD accessed using the local libpci library.
++.TP
++.B /dev/os2_oemhlp
++The 
++.B /dev/OEMHLP$ 
++driver in OS2KRNL/OS2LDR.
++.TP
++.B dos_bios
++The
++.B PCI System BIOS
++, using software interrupt 1A.
+ 
+ .P
+ By default, PCILIB uses the first available access method and displays no debugging

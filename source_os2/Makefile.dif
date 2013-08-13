@@ -1,0 +1,66 @@
+--- Makefile.org	2006-05-05 19:46:32.000000000 +0000
++++ Makefile	2006-05-31 11:44:28.000000000 +0000
+@@ -31,9 +31,17 @@
+ HOST=
+ RELEASE=
+ 
++EXEEXT=
++ifeq ($(shell uname),OS/2)
++EXEEXT=.exe
++endif
++
++lspci=lspci$(EXEEXT)
++setpci=setpci$(EXEEXT)
++
+ export
+ 
+-all: $(PCILIB) lspci setpci lspci.8 setpci.8 update-pciids update-pciids.8 pci.ids
++all: $(PCILIB) $(lspci) $(setpci) lspci.8 setpci.8 update-pciids update-pciids.8 pci.ids
+ 
+ $(PCILIB): $(PCIINC) force
+ 	$(MAKE) -C lib all
+@@ -43,8 +51,17 @@
+ lib/config.h:
+ 	cd lib && ./configure $(IDSDIR) $(VERSION) $(HOST) $(RELEASE)
+ 
+-lspci: lspci.o common.o $(PCILIB)
+-setpci: setpci.o common.o $(PCILIB)
++$(lspci): lspci.o common.o $(PCILIB)
++ifeq ($(shell uname),OS/2)
++	gcc $(CFLAGS) lspci.o common.o $(PCILIB) -o $@
++	lxlite /f+ /zx0 /zs0 /t /b- /cS $@
++endif	
++	
++$(setpci): setpci.o common.o $(PCILIB)
++ifeq ($(shell uname),OS/2)
++	gcc $(CFLAGS) setpci.o common.o $(PCILIB) -o $@
++	lxlite /f+ /zx0 /zs0 /t /b- /cS $@
++endif	
+ 
+ lspci.o: lspci.c pciutils.h $(PCIINC)
+ setpci.o: setpci.c pciutils.h $(PCIINC)
+@@ -58,7 +75,7 @@
+ 
+ clean:
+ 	rm -f `find . -name "*~" -o -name "*.[oa]" -o -name "\#*\#" -o -name TAGS -o -name core`
+-	rm -f update-pciids lspci setpci lib/config.* *.8 pci.ids.*
++	rm -f update-pciids $(lspci) $(setpci) lib/config.* *.8 pci.ids.*
+ 	rm -rf maint/dist
+ 
+ distclean: clean
+@@ -66,13 +83,13 @@
+ install: all
+ # -c is ignored on Linux, but required on FreeBSD
+ 	$(DIRINSTALL) -m 755 $(SBINDIR) $(IDSDIR) $(MANDIR)/man8
+-	$(INSTALL) -c -m 755 -s lspci setpci $(SBINDIR)
++	$(INSTALL) -c -m 755 -s $(lspci) $(setpci) $(SBINDIR)
+ 	$(INSTALL) -c -m 755 update-pciids $(SBINDIR)
+ 	$(INSTALL) -c -m 644 pci.ids $(IDSDIR)
+ 	$(INSTALL) -c -m 644 lspci.8 setpci.8 update-pciids.8 $(MANDIR)/man8
+ 
+ uninstall: all
+-	rm -f $(SBINDIR)/lspci $(SBINDIR)/setpci $(SBINDIR)/update-pciids
++	rm -f $(SBINDIR)/$(lspci) $(SBINDIR)/$(setpci) $(SBINDIR)/update-pciids
+ 	rm -f $(IDSDIR)/pci.ids
+ 	rm -f $(MANDIR)/man8/lspci.8 $(MANDIR)/man8/setpci.8 $(MANDIR)/man8/update-pciids.8
+ 
