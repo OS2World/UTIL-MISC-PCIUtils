@@ -1,0 +1,18 @@
+--- sysdep.h.org	2006-05-05 12:18:24.000000000 +0000
++++ sysdep.h	2005-12-07 19:45:26.000000000 +0000
+@@ -61,6 +61,15 @@
+ #endif
+ #endif
+ 
++/* OS/2 and DOS386 */
++#ifdef __WATCOMC__
++  #define LITTLE_ENDIAN 1234
++  #define BIG_ENDIAN 4321
++  #define PDP_ENDIAN 3412
++  #define BYTE_ORDER LITTLE_ENDIAN
++  #define strcasecmp strcmpi
++#endif
++
+ #if BYTE_ORDER == BIG_ENDIAN
+ #define cpu_to_le16 swab16
+ #define cpu_to_le32 swab32

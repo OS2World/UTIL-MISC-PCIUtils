@@ -1,0 +1,8 @@
+--- internal.h.org	2006-05-05 12:25:06.000000000 +0000
++++ internal.h	2006-05-31 13:01:44.000000000 +0000
+@@ -37,4 +37,4 @@
+ 
+ extern struct pci_methods pm_intel_conf1, pm_intel_conf2, pm_linux_proc,
+ 	pm_fbsd_device, pm_aix_device, pm_nbsd_libpci, pm_obsd_device, 
+-	pm_dump, pm_linux_sysfs;
++	pm_dump, pm_linux_sysfs, pm_os2_oemhlp, pm_dos_bios;

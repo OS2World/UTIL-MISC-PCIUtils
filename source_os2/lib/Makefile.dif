@@ -1,0 +1,37 @@
+--- Makefile.org	2006-05-05 12:25:06.000000000 +0000
++++ Makefile	2006-05-31 16:07:12.000000000 +0000
+@@ -49,6 +49,14 @@
+ PCILIB=libpciutils.a
+ endif
+ 
++ifdef PCI_HAVE_PM_OS2_OEMHLP
++OBJS += os2-device.o search_ids.o
++endif
++
++ifdef PCI_HAVE_PM_DOS_BIOS
++OBJS += dos-bios.o search_ids.o
++endif
++
+ all: $(PCILIB)
+ 
+ $(PCILIB): $(OBJS)
+@@ -57,14 +65,18 @@
+ 	ranlib $@
+ 
+ access.o: access.c $(INCL)
+-i386-ports.o: i386-ports.c $(INCL) i386-io-hurd.h i386-io-linux.h i386-io-sunos.h
++i386-ports.o: i386-ports.c $(INCL) i386-io-hurd.h i386-io-linux.h i386-io-sunos.h i386-io-dos.h i386-io-os2.h
+ proc.o: proc.c $(INCL) pread.h
+ sysfs.o: sysfs.c $(INCL) pread.h
+ generic.o: generic.c $(INCL)
+ syscalls.o: syscalls.c $(INCL)
+ fbsd-device.o: fbsd-device.c $(INCL)
++obsd-device.o: obsd-device.c $(INCL)
+ aix-device.o: aix-device.c $(INCL)
+ dump.o: dump.c $(INCL)
+ names.o: names.c $(INCL)
+ filter.o: filter.c $(INCL)
+ nbsd-libpci.o: nbsd-libpci.c $(INCL)
++dos-bios.o: dos-bios.c $(INCL)
++os2-device.o: os2-device.c $(INCL)
++search_ids.o: search_ids.c $(INCL) search_ids.h

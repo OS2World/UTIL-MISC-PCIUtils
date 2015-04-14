@@ -1,0 +1,16 @@
+--- types.h.org	2006-05-05 12:18:32.000000000 +0000
++++ types.h	2006-05-31 12:21:42.000000000 +0000
+@@ -10,6 +10,13 @@
+ 
+ #ifndef PCI_HAVE_Uxx_TYPES
+ 
++/* OpenWatcom: OS/2 and DOS386 */
++#ifdef __WATCOMC__
++typedef unsigned char   u_int8_t;
++typedef unsigned short u_int16_t;
++typedef unsigned long  u_int32_t;
++#endif
++
+ #ifdef PCI_OS_WINDOWS
+ typedef unsigned __int8 u8;
+ typedef unsigned __int16 u16;

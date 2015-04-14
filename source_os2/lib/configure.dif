@@ -1,0 +1,31 @@
+--- configure.org	2006-05-05 12:25:06.000000000 +0000
++++ configure	2006-05-31 22:52:30.000000000 +0000
+@@ -96,6 +96,28 @@
+ 		echo >>$c '#define PCI_HAVE_PM_INTEL_CONF'
+ 		ok=1
+ 		;;
++        os/2)
++		echo_n " OS/2"
++		# rewrite file to remove '/' in PCI_OS_OS/2
++		echo >$c  '#define PCI_ARCH_I386'
++		echo >>$c '#define PCI_OS_OS2'
++		echo >>$c '#define PCI_HAVE_PM_OS2_OEMHLP'
++		echo >>$c '#define PCI_HAVE_PM_INTEL_CONF'
++		echo >>$c '#define PCI_PATH_OS2_DEVICE "oemhlp$"'
++		# search pci.ids on the machine, not assume fixed path
++		idsdir='.'
++		ok=1
++		;;
++        dos)
++		echo_n " OS/2"        
++		echo >$c  '##define PCI_ARCH_I386'
++		echo >>$c '##define PCI_OS_DOS'
++		echo >>$c '##define PCI_HAVE_PM_INTEL_CONF'
++		echo >>$c '##define PCI_HAVE_PM_DOS_BIOS'
++		# search pci.ids on the machine, not assume fixed path
++		idsdir='.'
++		ok=1
++		;;
+         *)
+ 		echo " Unfortunately, your OS is not supported by the PCI Library"
+ 		exit 1
